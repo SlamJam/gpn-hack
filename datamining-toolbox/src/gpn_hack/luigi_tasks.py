@@ -7,7 +7,7 @@ import trio
 
 from . import hh, utils
 
-BUCKET_NAME = "o43-gpnhack-data-hh-testz"
+BUCKET_NAME = "o43-gpnhack-data-hh"
 
 
 def ids_s3_key_for_area(area_id):
@@ -89,7 +89,7 @@ class HHGetContries(luigi.Task):
 class MainTask(luigi.Task):
     # 113 - Россия, 1 - Москва, 83 - Смоленск
     # areas_ids = luigi.ListParameter([113])
-    areas_ids = luigi.ListParameter([83])
+    areas_ids = luigi.ListParameter([113])
 
     def requires(self):
         return [HHClearCompaniesDescriptionsAtArea(area_id) for area_id in self.areas_ids] + [HHGetContries()]
