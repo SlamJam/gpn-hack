@@ -1,0 +1,36 @@
+[tool.poetry]
+name = "gpn-hack"
+version = "0.1.0"
+description = ""
+authors = ["Anton Shurpin <anton.shurpin@gmail.com>"]
+license = "Apache-2.0"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+boto3 = "^1.18.21"
+httpx = "^0.18.2"
+trio = "^0.19.0"
+beautifulsoup4 = "^4.9.3"
+purl = "^1.6"
+Unidecode = "^1.2.0"
+luigi = {extras = ["toml"], version = "^3.0.3"}
+
+[tool.poetry.dev-dependencies]
+black = "^21.7b0"
+flake8 = "^3.9.2"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+line-length = 120
+
+# compatible with black
+[tool.isort]
+multi_line_output = 3
+include_trailing_comma = true
+force_grid_wrap = 0
+use_parentheses = true
+ensure_newline_before_comments = true
+line_length = 120
