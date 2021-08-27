@@ -1,0 +1,10 @@
+{
+	"clusters":	{
+	},
+	"indexes":	{
+		"companies":	{
+			"type":	"rt",
+			"path":	"companies"
+		}
+	}
+}
