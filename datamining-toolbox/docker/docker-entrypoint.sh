@@ -1,5 +1,5 @@
 #!/bin/bash
-set -ex
+set -euo pipefail
 
 if [ "$1" = 'lu' ]; then
     shift

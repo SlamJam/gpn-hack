@@ -1,0 +1,19 @@
+# For scheduler
+
+[scheduler]
+record_task_history = True
+state_path = /var/lib/luigi-server/luigi-state.pickle
+
+[task_history]
+db_connection = sqlite:////var/lib/luigi-server/luigi-task-hist.db
+
+# For clients
+
+[core]
+# from docker-compose.yml
+scheduler_host = luigi-scheduler
+
+[s3]
+aws_access_key_id = XXXXXXXXXXXXXXXXXXXXXXXX
+aws_secret_access_key = XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+endpoint_url = https://storage.yandexcloud.net

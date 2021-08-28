@@ -1,6 +1,6 @@
-# Project's ignpres
+# Project's ignores
 luigi.cfg
-
+/volumes
 
 # ### Defaults ###
 

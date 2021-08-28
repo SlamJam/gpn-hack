@@ -1,4 +1,4 @@
-version: '2.2'
+version: '3'
 
 services:
   manticore:
@@ -17,24 +17,24 @@ services:
         soft: -1
         hard: -1
     volumes:
-      - ./manticore-data:/var/lib/manticore
+      - ./volumes/manticore:/var/lib/manticore
       #- ./manticore.conf:/etc/manticoresearch/manticore.conf
 
   luigi-scheduler:
     build:
-      context: ../datamining-toolbox
-      dockerfile: ../datamining-toolbox/docker/Dockerfile
+      context: ./datamining-toolbox
+      dockerfile: docker/Dockerfile
 
     command: lud
     ports:
       - 8082:8082
     volumes:
-      - ./luigi-server-data:/var/lib/luigi-server/
+      - ./volumes/luigi-server:/var/lib/luigi-server/
 
 # luigi --module gpn_hack.luigi_tasks.index IndexHH
 
+# luigi.cfg:/app/luigi.cfg
 
 networks:
   default:
     name: gpn_hack
-
