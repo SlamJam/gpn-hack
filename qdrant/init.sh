@@ -3,7 +3,7 @@ curl -X POST 'http://localhost:6333/collections' \
     --data-raw '{
         "create_collection": {
             "name": "companies",
-            "vector_size": 200,
+            "vector_size": 1200,
             "distance": "Cosine"
         }
     }'
