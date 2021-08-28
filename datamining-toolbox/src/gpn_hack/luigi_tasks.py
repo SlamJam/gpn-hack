@@ -92,4 +92,6 @@ class MainTask(luigi.Task):
     areas_ids = luigi.ListParameter([113])
 
     def requires(self):
-        return [HHClearCompaniesDescriptionsAtArea(area_id) for area_id in self.areas_ids] + [HHGetContries()]
+        return [
+            HHClearCompaniesDescriptionsAtArea(area_id) for area_id in self.areas_ids
+        ] + [HHGetContries()]

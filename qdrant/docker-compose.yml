@@ -1,0 +1,21 @@
+version: '2.2'
+
+services:
+  qdrant:
+    container_name: qdrant
+    image: generall/qdrant
+    restart: always
+    ports:
+      - 127.0.0.1:6333:6333
+    ulimits:
+      nproc: 65535
+      nofile:
+         soft: 65535
+         hard: 65535
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - ./data_qdrant:/qdrant/storage
+
+      #- ./manticore.conf:/etc/manticoresearch/manticore.conf 
