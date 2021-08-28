@@ -9,7 +9,7 @@ def parse_date(s, dt_format='%Y-%m-%d'):
 
 
 class RubaseScraper(scrapy.Spider):
-    download_delay = 5.0
+    download_delay = 3.0
 
     def __init__(self, url, path, name='rubase_scrapper', date_from=None, **kwargs):
         super().__init__(name=name, **kwargs)
@@ -23,7 +23,7 @@ class RubaseScraper(scrapy.Spider):
     def parse(self, response):
         sel = Selector(text=response.text)
         urls = sel.xpath('//loc/text()').extract()
-        for url in urls[:3]:
+        for url in urls:
             yield scrapy.Request(url=url, callback=self.extract_urls_from_page)
 
     def extract_urls_from_page(self, response):
