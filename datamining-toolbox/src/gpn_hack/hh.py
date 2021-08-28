@@ -61,7 +61,9 @@ def build_absolute_url_regard_to(relative, base):
 
 
 def select_companies_from_sub_industries_page(soup):
-    for element in soup.select("div.employers-company__list_companies div.employers-company__item a"):
+    for element in soup.select(
+        "div.employers-company__list_companies div.employers-company__item a"
+    ):
         href = element.get("href")
         p_href = purl.URL(href)
 
@@ -84,7 +86,9 @@ async def get_contries(client):
     return r.json()
 
 
-async def sub_industries_parser(client, url, nursery, limit, companies_send_channel, pages_send_channel):
+async def sub_industries_parser(
+    client, url, nursery, limit, companies_send_channel, pages_send_channel
+):
 
     global sub_industries
 
@@ -107,7 +111,9 @@ async def sub_industries_parser(client, url, nursery, limit, companies_send_chan
                 pages_send_channel.clone(),
             )
 
-        await companies_send_channel.send(list(select_companies_from_sub_industries_page(soup)))
+        await companies_send_channel.send(
+            list(select_companies_from_sub_industries_page(soup))
+        )
 
         pages = soup.select('div[data-qa="pager-block"] a[data-qa="pager-page"]')
         if pages:
@@ -119,20 +125,28 @@ async def sub_industries_parser(client, url, nursery, limit, companies_send_chan
                 await pages_send_channel.send(link.as_string())
 
 
-async def sub_industries_page_parser(client, pages_receive_channel, companies_send_channel):
+async def sub_industries_page_parser(
+    client, pages_receive_channel, companies_send_channel
+):
     async with companies_send_channel:
         async for url in pages_receive_channel:
             data = await get_url(client, url)
             soup = bs4.BeautifulSoup(data, "html.parser")
 
-            await companies_send_channel.send(list(select_companies_from_sub_industries_page(soup)))
+            await companies_send_channel.send(
+                list(select_companies_from_sub_industries_page(soup))
+            )
 
 
-async def collect_companies_ids_with_parsing(area_id, *, max_page_parsers=80, max_sub_industries_parsers=40):
+async def collect_companies_ids_with_parsing(
+    area_id, *, max_page_parsers=80, max_sub_industries_parsers=40
+):
     """Собирает ID компаний путём парсинга страницы с компаниями в регионе area_id"""
 
     pages_send_channel, pages_receive_channel = trio.open_memory_channel(math.inf)
-    companies_send_channel, companies_receive_channel = trio.open_memory_channel(math.inf)
+    companies_send_channel, companies_receive_channel = trio.open_memory_channel(
+        math.inf
+    )
     sub_industries_limit = trio.CapacityLimiter(max_sub_industries_parsers)
 
     async with httpx.AsyncClient() as client, trio.open_nursery() as nursery:
@@ -176,7 +190,9 @@ async def collect_companies_ids_with_parsing(area_id, *, max_page_parsers=80, ma
 
 
 async def resolve_companies_info(company_ids):
-    companies_send_channel, companies_receive_channel = trio.open_memory_channel(math.inf)
+    companies_send_channel, companies_receive_channel = trio.open_memory_channel(
+        math.inf
+    )
     result_send_channel, result_receive_channel = trio.open_memory_channel(math.inf)
 
     max_company_resolvers = 200
