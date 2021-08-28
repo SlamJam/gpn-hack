@@ -19,7 +19,8 @@ Example `luigi.cfg`:
 
 ```
 [core]
-scheduler_host = "luigi-host.mycompany.foo"
+# from docker-compose.yml
+scheduler_host=scheduler
 
 [s3]
 aws_access_key_id=XXXXXXXXXXXXXXXXXXXXXXXX

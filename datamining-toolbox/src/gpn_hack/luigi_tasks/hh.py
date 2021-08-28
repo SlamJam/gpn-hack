@@ -5,9 +5,8 @@ import luigi
 import luigi.contrib.s3
 import trio
 
-from . import hh, utils
-
-BUCKET_NAME = "o43-gpnhack-data-hh"
+from .. import hh, utils
+from .common import BUCKET_NAME
 
 
 def ids_s3_key_for_area(area_id):
@@ -84,14 +83,3 @@ class HHGetContries(luigi.Task):
 
     def output(self):
         return luigi.contrib.s3.S3Target(contries_s3_key())
-
-
-class MainTask(luigi.Task):
-    # 113 - Россия, 1 - Москва, 83 - Смоленск
-    # areas_ids = luigi.ListParameter([113])
-    areas_ids = luigi.ListParameter([113])
-
-    def requires(self):
-        return [
-            HHClearCompaniesDescriptionsAtArea(area_id) for area_id in self.areas_ids
-        ] + [HHGetContries()]
