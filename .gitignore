@@ -1,6 +1,12 @@
+<<<<<<< HEAD
 # Project's ignpres
 luigi.cfg
 
+=======
+# Project's ignores
+luigi.cfg
+/volumes
+>>>>>>> 0a3bcf79386871f340c2ffbf7b4a9638ae51d416
 
 # ### Defaults ###
 

@@ -1,0 +1,40 @@
+version: '3'
+
+services:
+  manticore:
+    container_name: manticore
+    image: manticoresearch/manticore
+    restart: always
+    ports:
+      - 9306:9306
+      - 9308:9308
+    ulimits:
+      nproc: 65535
+      nofile:
+         soft: 65535
+         hard: 65535
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - ./volumes/manticore:/var/lib/manticore
+      #- ./manticore.conf:/etc/manticoresearch/manticore.conf
+
+  luigi-scheduler:
+    build:
+      context: ./datamining-toolbox
+      dockerfile: docker/Dockerfile
+
+    command: lud
+    ports:
+      - 8082:8082
+    volumes:
+      - ./volumes/luigi-server:/var/lib/luigi-server/
+
+# luigi --module gpn_hack.luigi_tasks.index IndexHH
+
+# luigi.cfg:/app/luigi.cfg
+
+networks:
+  default:
+    name: gpn_hack

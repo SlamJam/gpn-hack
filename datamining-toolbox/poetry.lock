@@ -259,12 +259,34 @@ prometheus = ["prometheus-client (==0.5.0)"]
 toml = ["toml (<2.0.0)"]
 
 [[package]]
+name = "manticoresearch"
+version = "1.0.5"
+description = "Python client for Manticore Search"
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+certifi = "*"
+python-dateutil = "*"
+six = ">=1.10"
+urllib3 = ">=1.15"
+
+[[package]]
 name = "mccabe"
 version = "0.6.1"
 description = "McCabe checker, plugin for flake8"
 category = "dev"
 optional = false
 python-versions = "*"
+
+[[package]]
+name = "more-itertools"
+version = "8.8.0"
+description = "More routines for operating on iterables, beyond itertools"
+category = "main"
+optional = false
+python-versions = ">=3.5"
 
 [[package]]
 name = "mypy-extensions"
@@ -501,7 +523,7 @@ socks = ["PySocks (>=1.5.6,!=1.5.7,<2.0)"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "1bd728ca89f1919fee3d3cdbef544668a1d54563e762c2f7ba4aa9edaa103785"
+content-hash = "cab52a60a020c202404f379232e4592d800e281b8d66971b96ad7ed2d3287ac7"
 
 [metadata.files]
 anyio = [
@@ -631,9 +653,17 @@ lockfile = [
 luigi = [
     {file = "luigi-3.0.3.tar.gz", hash = "sha256:7edc05a32bcff5aad28d7c7e3b15b761ef13fe2a495692602ebf0800eba66849"},
 ]
+manticoresearch = [
+    {file = "manticoresearch-1.0.5-py3-none-any.whl", hash = "sha256:0845cb67e18680f3a08f4444f17f5fbc526981f740eb097f4ec69dfa31a9f574"},
+    {file = "manticoresearch-1.0.5.tar.gz", hash = "sha256:b635eee8eab8319a37453d70234f35c0d2529070f59a71c3a37122ddd7aa4864"},
+]
 mccabe = [
     {file = "mccabe-0.6.1-py2.py3-none-any.whl", hash = "sha256:ab8a6258860da4b6677da4bd2fe5dc2c659cff31b3ee4f7f5d64e79735b80d42"},
     {file = "mccabe-0.6.1.tar.gz", hash = "sha256:dd8d182285a0fe56bace7f45b5e7d1a6ebcbf524e8f3bd87eb0f125271b8831f"},
+]
+more-itertools = [
+    {file = "more-itertools-8.8.0.tar.gz", hash = "sha256:83f0308e05477c68f56ea3a888172c78ed5d5b3c282addb67508e7ba6c8f813a"},
+    {file = "more_itertools-8.8.0-py3-none-any.whl", hash = "sha256:2cf89ec599962f2ddc4d568a05defc40e0a587fbc10d5989713638864c36be4d"},
 ]
 mypy-extensions = [
     {file = "mypy_extensions-0.4.3-py2.py3-none-any.whl", hash = "sha256:090fedd75945a69ae91ce1303b5824f428daf5a028d2f6ab8a299250a846f15d"},
