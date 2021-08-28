@@ -1,10 +1,9 @@
-package energybase
+package neftegaz
 
 import (
 	"encoding/json"
 	"fmt"
 	"hash/fnv"
-	"net/http"
 	"os"
 	"regexp"
 	"strings"
@@ -34,7 +33,7 @@ type Company struct {
 func CrawlCompanyPage(url string) (*Company, error) {
 	fmt.Printf("crawl company page %q\n", url)
 
-	req, err := http.Get(url)
+	req, err := Request(url)
 	if err != nil {
 		return nil, errors.Wrapf(err, "cannot get url %q", url)
 	}

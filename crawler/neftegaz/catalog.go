@@ -1,8 +1,7 @@
-package energybase
+package neftegaz
 
 import (
 	"fmt"
-	"net/http"
 
 	"github.com/PuerkitoBio/goquery"
 	"github.com/pkg/errors"
@@ -16,13 +15,13 @@ type CatalogItem struct {
 func CrawlCatalogPage(url string) ([]CatalogItem, error) {
 	fmt.Printf("crawl catalog page %q\n", url)
 
-	req, err := http.Get(url)
+	res, err := Request(url)
 	if err != nil {
 		return nil, errors.Wrapf(err, "cannot get url %q", url)
 	}
-	defer req.Body.Close()
+	defer res.Body.Close()
 
-	doc, err := goquery.NewDocumentFromReader(req.Body)
+	doc, err := goquery.NewDocumentFromReader(res.Body)
 	if err != nil {
 		return nil, errors.Wrap(err, "cannot create new document reader")
 	}
