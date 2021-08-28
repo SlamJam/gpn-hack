@@ -9,7 +9,7 @@ import (
 	"github.com/pkg/errors"
 )
 
-const RequestDelay = time.Second
+const RequestDelay = 750 * time.Millisecond
 
 func Request(url string) (*http.Response, error) {
 	req, err := http.NewRequest(http.MethodGet, url, nil)
