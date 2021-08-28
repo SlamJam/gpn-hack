@@ -1,10 +1,13 @@
-import json
+import logging
 
 import luigi
 import luigi.contrib.s3
 
-
 from . import hh
+
+# Disable all child loggers
+logging.getLogger("botocore").propagate = False
+logging.getLogger("boto3").propagate = False
 
 
 class MainTask(luigi.Task):

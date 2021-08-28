@@ -1,48 +1,25 @@
 import json
 
+import elasticsearch as es
 import luigi
 import luigi.contrib.s3
 import luigi.mock
-import manticoresearch
 import more_itertools as mit
 
+from .. import utils
 from . import hh
-from .common import DEFAULT_HH_AREAS, MANTICORE_URL
+from .common import DEFAULT_HH_AREAS, ELASTICSEARCH_URL
 
 
-# Defining the host is optional and defaults to http://127.0.0.1:9308
-# See configuration.py for a list of all supported configuration parameters.
-configuration = manticoresearch.Configuration(host=MANTICORE_URL)
+COMPANIES_COLLECTION = "companies"
 
 
 class InitIndex(luigi.Task):
     def run(self):
-        with manticoresearch.ApiClient(configuration) as api_client:
-            # creating table
-            api_instance = manticoresearch.UtilsApi(api_client)
+        # TODO: recreate collection in ES
+        pass
 
-            res = api_instance.sql(
-                "mode=raw&query=CREATE TABLE if not exists companies"
-                "("
-                "name text stored indexed, "
-                "email text stored indexed, "
-                "site_url text stored, "
-                "phone text, "
-                "description text stored indexed, "
-                "name_morph text indexed, "
-                "description_morph text indexed"
-                ") "
-                "min_prefix_len = '3' "
-                "morphology = 'stem_ru' "
-                "stopwords = 'ru' "
-                "morphology_skip_fields = 'name,phone,email,description, site_url' "
-            )
-            print(res)
-
-            # res = api_instance.sql('mode=raw&query=SHOW TABLES')
-            # print(res)
-
-        with self.output().open('w'):
+        with self.output().open("w"):
             pass
 
     def output(self):
@@ -56,47 +33,50 @@ class IndexHHArea(luigi.Task):
         return InitIndex(), hh.HHClearCompaniesDescriptionsAtArea(self.area_id)
 
     def run(self):
-        with manticoresearch.ApiClient(configuration) as api_client:
-            # bulk index method
-            api_instance = manticoresearch.IndexApi(api_client)
+        # FIXME: For debug only
+        # with open("area_113_companies_info_stripped.json") as f:
 
-            print("Load data")
-
-            _, area_input = self.input()
-            with area_input.open() as f:
-                data = json.load(f)
-
-            print("Start indexing")
+        _, area_input = self.input()
+        with area_input.open() as f:
+            # data = ijson.items(f, "item")
+            data = utils.iter_over_jsonl(f)
 
             # 47 - отрасль "Нефть и газ"
-            data = filter(lambda c: any(ind == "47" or ind.startswith("47.") for ind in c["industries"]), data)
+            data = filter(
+                lambda c: any(
+                    ind_id == "47" or ind_id.startswith("47.")
+                    for ind in c["industries"]
+                    if (ind_id := ind["id"]) or True
+                ),
+                data,
+            )
+
+            def company_docs_to_es_bulk(companies):
+                for c in companies:
+                    meta = {"index": {}}
+                    doc = {
+                        "name": c["name"],
+                        "email": "",
+                        "phone": "",
+                        "site_url": c["site_url"],
+                        "description": c["description"],
+                    }
+
+                    yield meta
+                    yield doc
+
+            client = es.Elasticsearch(ELASTICSEARCH_URL)
 
             chunk_size = 1000
             for i, chunk in enumerate(mit.chunked(data, chunk_size)):
                 print("Load chunk:", i, "docs:", i * chunk_size + len(chunk))
-                docs = [
-                    {
-                        "insert": {
-                            "index": "companies",
-                            "doc": {
-                                "name": c["name"],
-                                "name_morph": c["name"],
-                                "email": "",
-                                "phone": "",
-                                "site_url": c["site_url"],
-                                "description": c["description"],
-                                "description_morph": c["description"],
-                            },
-                        }
-                    }
-                    for c in chunk
-                ]
 
-                res = api_instance.bulk("\n".join(map(json.dumps, docs)))
+                body = "\n".join(map(json.dumps, company_docs_to_es_bulk(chunk)))
+                res = client.bulk(index="companies", body=body)
                 # print(res)
 
-            with self.output().open('w'):
-                pass
+        with self.output().open("w"):
+            pass
 
     def output(self):
         return luigi.mock.MockTarget(f"indexing/IndexHHArea{self.area_id}")

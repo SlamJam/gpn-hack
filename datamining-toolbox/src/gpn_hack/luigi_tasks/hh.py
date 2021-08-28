@@ -3,6 +3,7 @@ import json
 import httpx
 import luigi
 import luigi.contrib.s3
+import luigi.format
 import trio
 
 from .. import hh, utils
@@ -18,7 +19,7 @@ def infos_s3_key_for_area(area_id):
 
 
 def cleared_infos_s3_key_for_area(area_id):
-    return f"s3://{BUCKET_NAME}/area_{area_id}_companies_info_stripped.json"
+    return f"s3://{BUCKET_NAME}/area_{area_id}_companies_info_stripped.jsonl.gz"
 
 
 def contries_s3_key():
@@ -68,10 +69,10 @@ class HHClearCompaniesDescriptionsAtArea(luigi.Task):
             data = json.load(f)
 
         with self.output().open("w") as f:
-            utils.save_pretty_json([hh.strip_tags_in_description(c) for c in data], f)
+            utils.save_jsonl((hh.strip_tags_in_description(c) for c in data), f)
 
     def output(self):
-        return luigi.contrib.s3.S3Target(cleared_infos_s3_key_for_area(self.area_id))
+        return luigi.contrib.s3.S3Target(cleared_infos_s3_key_for_area(self.area_id), format=luigi.format.Gzip)
 
 
 class HHGetContries(luigi.Task):
