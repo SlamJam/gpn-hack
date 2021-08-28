@@ -5,7 +5,7 @@ luigi.cfg
 # ### Defaults ###
 
 # Mac/OSX
-.DS_Store/*
+.DS_Store
 
 # Windows
 Thumbs.db
@@ -27,5 +27,13 @@ docs/_build/
 # Environments
 .venv
 
-# idea
-.idea/*
+.ipynb_checkpoints
+.tox
+.DS_Store
+\#*#
+.#*
+.pytest_cache
+
+*.swp
+*.map
+.idea/
