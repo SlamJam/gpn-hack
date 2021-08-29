@@ -4,22 +4,22 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"io"
 	"log"
 	"net/http"
-	"os"
 	"strings"
 
 	"github.com/pkg/errors"
 
 	"github.com/SlamJam/gpn-hack/imageserver"
 	"github.com/SlamJam/gpn-hack/imageserver/screenshoter"
+	"github.com/SlamJam/gpn-hack/imageserver/storage"
 )
 
-func New(cfg Config, scr *screenshoter.Screenshoter) *Server {
+func New(cfg Config, scr *screenshoter.Screenshoter, s3 *storage.Storage) *Server {
 	s := Server{
 		cfg: cfg,
 		scr: scr,
+		s3:  s3,
 	}
 	s.srv = &http.Server{
 		Addr:    cfg.Address,
@@ -32,6 +32,7 @@ type Server struct {
 	cfg Config
 	srv *http.Server
 	scr *screenshoter.Screenshoter
+	s3  *storage.Storage
 }
 
 type UpdateRequest struct {
@@ -45,14 +46,14 @@ func (s *Server) handler(w http.ResponseWriter, r *http.Request) {
 	case http.MethodGet:
 
 		filename := fmt.Sprintf("images/%s", strings.TrimLeft(r.RequestURI, "/"))
-		file, err := os.OpenFile(filename, os.O_RDONLY, 0644)
+		barr, err := s.s3.Get(filename)
 		if err != nil {
+			log.Println(errors.Wrapf(err, "cannot get file %q", filename))
 			w.Write(imageserver.NotFound)
 			return
 		}
-		defer file.Close()
 
-		if _, err := io.Copy(w, file); err != nil {
+		if _, err := w.Write(barr); err != nil {
 			log.Println(errors.Wrap(err, "cannot copy file to response"))
 			return
 		}

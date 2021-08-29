@@ -2,7 +2,6 @@ package server
 
 import (
 	"fmt"
-	"os"
 
 	"github.com/pkg/errors"
 )
@@ -14,8 +13,8 @@ func (s *Server) screenshot(id, url string) error {
 	}
 
 	filename := fmt.Sprintf("images/%s.png", id)
-	if err := os.WriteFile(filename, barr, 0644); err != nil {
-		return errors.Wrap(err, "cannot write file")
+	if err := s.s3.Upload(filename, barr); err != nil {
+		return errors.Wrapf(err, "cannot upload file with %q", id)
 	}
 
 	return nil
