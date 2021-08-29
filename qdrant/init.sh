@@ -8,11 +8,11 @@ curl -X POST 'http://localhost:6333/collections' \
         }
     }'
 
-
-
 #for deletion
 #curl -X POST 'http://localhost:6333/collections' \
 #    -H 'Content-Type: application/json' \
 #    --data-raw '{
 #         "delete_collection": "companies"
 #    }'
+
+
