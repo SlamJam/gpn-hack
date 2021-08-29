@@ -72,6 +72,14 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
 
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.prod
+
+    ports:
+      - 80:80
+
 networks:
   default:
     name: gpn_hack
