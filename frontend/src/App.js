@@ -94,6 +94,14 @@ const config = {
     //     ]
     //   }
     // }
+    // filters: {
+    //   "email":
+    // }
+    // disjunctiveFacets: ["email"],
+    facets: {
+      industries: { type: "value" },
+      // states: { type: "value", size: 30 },
+    }
   },
   autocompleteQuery: {
     results: {
@@ -159,10 +167,15 @@ export default function App() {
                         <Sorting label={"Сортировка"} sortOptions={SORT_OPTIONS} />
                       )}
                       <Facet
-                        field="states"
-                        label="Регионы"
+                        field="industries"
+                        label="Индустрии"
                         filterType="any"
                         isFilterable={true}
+                      />
+                      <Facet
+                        field="email"
+                        label="Email"
+                        view={BooleanFacet}
                       />
                       <Facet
                         field="acres"
