@@ -80,6 +80,23 @@ services:
     ports:
       - 80:80
 
+  qdrant:
+    container_name: qdrant
+    image: generall/qdrant
+    restart: always
+    ports:
+      - 6333:6333
+    ulimits:
+      nproc: 65535
+      nofile:
+         soft: 65535
+         hard: 65535
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - ./volumes/qdrant:/qdrant/storage
+
 networks:
   default:
     name: gpn_hack

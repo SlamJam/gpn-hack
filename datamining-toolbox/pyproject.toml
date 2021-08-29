@@ -6,7 +6,7 @@ authors = ["Anton Shurpin <anton.shurpin@gmail.com>"]
 license = "Apache-2.0"
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = "^3.8,<3.11"
 boto3 = "^1.18.21"
 httpx = "^0.18.2"
 trio = "^0.19.0"
@@ -20,6 +20,11 @@ elasticsearch = {extras = ["async"], version = "^7.14.0"}
 ijson = "^3.1.4"
 jsonlines = "^2.0.0"
 SQLAlchemy = "^1.4.23"
+requests = "^2.26.0"
+compress-fasttext = "^0.0.7"
+gensim = "<=3.8.3"
+fasttext = "^0.9.2"
+numpy = "^1.21.2"
 
 [tool.poetry.dev-dependencies]
 black = "^21.7b0"
