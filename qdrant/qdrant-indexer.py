@@ -15,19 +15,12 @@ class QIndexer:
 
     def form_batch(self, docs_list: List[Dict], batch_size: int) -> List[Dict]:
         for i in range(0, len(docs_list) - 1, batch_size):
-            yield docs_list[i : i + batch_size]
+            yield docs_list[i: i + batch_size]
 
     def form_point(self, document: Dict) -> Dict:
         result = {}
         result["id"] = document["id"]
         result["vector"] = self.embed(document["description"])
-        result["payload"] = {
-            "name": document["name"],
-            "email": document["email"],
-            "phone": document["phone"],
-            "description": document["description"],
-            "industries": document["industries"],
-        }
         return result
 
     def bulk_load(self, batch_size, host, collection, docs_list: List[Dict]) -> str:
@@ -43,7 +36,7 @@ class QIndexer:
 
 data = [
     {
-        "id": 5,
+        "id": "asf",
         "description": "test",
         "name": "tesasdft na12me",
         "email": "a@2",
@@ -51,7 +44,7 @@ data = [
         "industries": ["124", "res"],
     },
     {
-        "id": 6,
+        "id": "asg",
         "description": "teasdfgasegasegst",
         "name": "test n12ame",
         "email": "a@2",
@@ -59,7 +52,7 @@ data = [
         "industries": ["124", "segaji"],
     },
     {
-        "id": 7,
+        "id": "4awsdag",
         "description": "teweasdfgqwegqwest",
         "name": "test n12ame",
         "email": "a@2",
@@ -82,7 +75,7 @@ vect = [random() for i in range(1200)]
 qur = {
     "filter": {"must": [{"key": "industries", "match": {"keyword": "res"}}]},
     "vector": vect,
-    "top": 3,
+    "top": 10,
 }
 print(
     requests.post(

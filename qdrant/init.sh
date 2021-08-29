@@ -7,3 +7,12 @@ curl -X POST 'http://localhost:6333/collections' \
             "distance": "Cosine"
         }
     }'
+
+
+
+#for deletion
+#curl -X POST 'http://localhost:6333/collections' \
+#    -H 'Content-Type: application/json' \
+#    --data-raw '{
+#         "delete_collection": "companies"
+#    }'
