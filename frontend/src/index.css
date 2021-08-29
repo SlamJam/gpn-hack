@@ -1,0 +1,56 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
+}
+
+.Logo {
+  margin-top: 32px;
+}
+
+.Logo svg {
+  width: 100%;
+}
+
+input.button.sui-search-box__submit {
+  cursor: pointer;
+  margin: 0;
+  background: #2799d6;
+  box-shadow: 0 4px 8px 0 rgba(39, 153, 214, .35);
+  font-size: 18px;
+  height: 48px;
+  line-height: 46px;
+  font-weight: 400;
+  text-align: center;
+  display: inline-block;
+  white-space: nowrap;
+  border-radius: 4px;
+  margin-left: 10px;
+  padding: 0 32px;
+  border: 0 none;
+  text-decoration: none;
+  vertical-align: top;
+  color: #fff;
+  border-bottom: none;
+  transition: background-color 0.05s ease;
+}
+
+input.button.sui-search-box__submit &:hover {
+  background: #7cc1e6;
+  box-shadow: 0 4px 8px 0 rgba(39, 153, 214, .25);
+}
+
+div.sui-search-box {
+  max-width: 1300px;
+  margin-left: auto;
+  margin-right: auto;
+}
