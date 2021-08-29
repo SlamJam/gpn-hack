@@ -5,21 +5,21 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
 	"strings"
 
-	"github.com/chromedp/chromedp"
 	"github.com/pkg/errors"
 
 	"github.com/SlamJam/gpn-hack/imageserver"
+	"github.com/SlamJam/gpn-hack/imageserver/screenshoter"
 )
 
-func New(cfg Config) *Server {
+func New(cfg Config, scr *screenshoter.Screenshoter) *Server {
 	s := Server{
 		cfg: cfg,
+		scr: scr,
 	}
 	s.srv = &http.Server{
 		Addr:    cfg.Address,
@@ -31,15 +31,16 @@ func New(cfg Config) *Server {
 type Server struct {
 	cfg Config
 	srv *http.Server
+	scr *screenshoter.Screenshoter
 }
 
 type UpdateRequest struct {
-	ID  string `json:"id"`
-	URL string `json:"url"`
+	ID    string `json:"id"`
+	URL   string `json:"url"`
+	Async bool   `json:"async"`
 }
 
 func (s *Server) handler(w http.ResponseWriter, r *http.Request) {
-
 	switch r.Method {
 	case http.MethodGet:
 
@@ -58,30 +59,19 @@ func (s *Server) handler(w http.ResponseWriter, r *http.Request) {
 
 	case http.MethodPost:
 
+		defer r.Body.Close()
+
 		var request UpdateRequest
 		if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
 			http.Error(w, "cannot decode request", http.StatusBadRequest)
 			return
 		}
 
-		go func() {
-			defer r.Body.Close()
-
-			ctx, cancel := chromedp.NewContext(context.Background(), chromedp.WithErrorf(log.Printf))
-			defer cancel()
-
-			var barr []byte
-			if err := chromedp.Run(ctx, imageserver.ScreenshotTasks(request.URL, &barr)); err != nil {
-				log.Println(errors.Wrap(err, "cannot run chrome task"))
-				return
-			}
-
-			filename := fmt.Sprintf("images/%s.png", request.ID)
-			if err := ioutil.WriteFile(filename, barr, 0644); err != nil {
-				log.Println(errors.Wrap(err, "cannot write file"))
-				return
-			}
-		}()
+		if request.Async {
+			go s.screenshot(request.ID, request.URL)
+			return
+		}
+		s.screenshot(request.ID, request.URL)
 
 	default:
 		http.Error(w, "not implemented", http.StatusNotImplemented)
