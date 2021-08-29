@@ -48,7 +48,7 @@ func (s *Server) handler(w http.ResponseWriter, r *http.Request) {
 		filename := fmt.Sprintf("images/%s", strings.TrimLeft(r.RequestURI, "/"))
 		barr, err := s.s3.Get(filename)
 		if err != nil {
-			log.Println(errors.Wrapf(err, "cannot get file %q", filename))
+			// log.Println(errors.Wrapf(err, "cannot get file %q", filename))
 			w.Write(imageserver.NotFound)
 			return
 		}

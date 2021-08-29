@@ -1,13 +1,16 @@
 package screenshoter
 
 import (
+	"bytes"
 	"context"
 	_ "embed"
+	"image/png"
 	"log"
 	"time"
 
 	"github.com/chromedp/cdproto/page"
 	"github.com/chromedp/chromedp"
+	"github.com/nfnt/resize"
 	"github.com/pkg/errors"
 )
 
@@ -30,7 +33,18 @@ func (s *Screenshoter) Do(url string) ([]byte, error) {
 		return nil, errors.Wrap(err, "cannot run chrome task")
 	}
 
-	return barr, nil
+	img, err := png.Decode(bytes.NewBuffer(barr))
+	if err != nil {
+		return nil, errors.Wrap(err, "cannot decode image")
+	}
+	m := resize.Resize(320, 0, img, resize.Lanczos3)
+
+	var buf bytes.Buffer
+	if err := png.Encode(&buf, m); err != nil {
+		return nil, errors.Wrap(err, "cannot encode image")
+	}
+
+	return buf.Bytes(), nil
 }
 
 func (s *Screenshoter) tasks(url string, barr *[]byte) chromedp.Tasks {
