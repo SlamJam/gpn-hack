@@ -36,7 +36,7 @@ const SORT_OPTIONS = [
   },
   {
     name: "Наименование",
-    value: "title",
+    value: "name",
     direction: "asc"
   }
 ];
@@ -46,17 +46,17 @@ if (process.env.REACT_APP_SOURCE === "SITE_SEARCH") {
   connector = new SiteSearchAPIConnector({
     engineKey:
       process.env.REACT_SITE_SEARCH_ENGINE_KEY || "Z43R5U3HiDsDgpKawZkA",
-    documentType: process.env.REACT_SITE_SEARCH_ENGINE_NAME || "national-parks"
+    documentType: process.env.REACT_SITE_SEARCH_ENGINE_NAME || "companies"
   });
 } else {
   connector = new AppSearchAPIConnector({
     searchKey:
-      process.env.REACT_APP_SEARCH_KEY || "search-371auk61r2bwqtdzocdgutmg",
+      process.env.REACT_APP_SEARCH_KEY || "search-471t5s3fvwd1amhnn8eagzmu",
     engineName:
-      process.env.REACT_APP_SEARCH_ENGINE_NAME || "search-ui-examples",
-    hostIdentifier:
-      process.env.REACT_APP_SEARCH_HOST_IDENTIFIER || "host-2376rb",
-    endpointBase: process.env.REACT_APP_SEARCH_ENDPOINT_BASE || ""
+      process.env.REACT_APP_SEARCH_ENGINE_NAME || "gazpromneft",
+    // hostIdentifier:
+    //   process.env.REACT_APP_SEARCH_HOST_IDENTIFIER || "",
+    endpointBase: process.env.REACT_APP_SEARCH_ENDPOINT_BASE || "https://gazpromneft.ent.eastus2.azure.elastic-cloud.com"
   });
 }
 
@@ -64,54 +64,48 @@ const config = {
   alwaysSearchOnInitialLoad: false,
   searchQuery: {
     result_fields: {
-      visitors: { raw: {} },
-      world_heritage_site: { raw: {} },
-      location: { raw: {} },
-      acres: { raw: {} },
-      square_km: { raw: {} },
-      title: {
+      email: { raw: {} },
+      phone: { raw: {} },
+      site_url: { raw: {} },
+      name: {
         snippet: {
           size: 100,
           fallback: true
         }
       },
-      nps_link: { raw: {} },
-      states: { raw: {} },
-      date_established: { raw: {} },
-      image_url: { raw: {} },
       description: {
         snippet: {
-          size: 100,
+          size: 500,
           fallback: true
         }
       }
     },
-    disjunctiveFacets: ["acres", "states", "date_established", "location"],
-    facets: {
-      world_heritage_site: { type: "value" },
-      states: { type: "value", size: 30 },
-      acres: {
-        type: "range",
-        ranges: [
-          { from: -1, name: "Any" },
-          { from: 0, to: 1000, name: "Small" },
-          { from: 1001, to: 100000, name: "Medium" },
-          { from: 100001, name: "Large" }
-        ]
-      }
-    }
+    // disjunctiveFacets: ["acres", "states", "date_established", "location"],
+    // facets: {
+    //   world_heritage_site: { type: "value" },
+    //   states: { type: "value", size: 30 },
+    //   acres: {
+    //     type: "range",
+    //     ranges: [
+    //       { from: -1, name: "Any" },
+    //       { from: 0, to: 1000, name: "Small" },
+    //       { from: 1001, to: 100000, name: "Medium" },
+    //       { from: 100001, name: "Large" }
+    //     ]
+    //   }
+    // }
   },
   autocompleteQuery: {
     results: {
       resultsPerPage: 5,
       result_fields: {
-        title: {
+        name: {
           snippet: {
             size: 100,
             fallback: true
           }
         },
-        nps_link: {
+        site_url: {
           raw: {}
         }
       }
@@ -119,7 +113,7 @@ const config = {
     suggestions: {
       types: {
         documents: {
-          fields: ["title"]
+          fields: ["name", "site_url"]
         }
       },
       size: 4
@@ -150,8 +144,8 @@ export default function App() {
                       autocompleteResults={{
                         linkTarget: "_blank",
                         sectionTitle: "",
-                        titleField: "title",
-                        urlField: "nps_link",
+                        titleField: "name",
+                        urlField: "site_url",
                         shouldTrackClickThrough: true,
                         clickThroughTags: ["test"]
                       }}
@@ -179,9 +173,8 @@ export default function App() {
                   }
                   bodyContent={
                     <Results
-                      titleField="title"
-                      urlField="nps_link"
-                      // thumbnailField="image_url"
+                      titleField="name"
+                      urlField="site_url"
                       shouldTrackClickThrough={true}
                     />
                   }
