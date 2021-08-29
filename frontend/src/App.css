@@ -32,3 +32,7 @@
     transform: rotate(360deg);
   }
 }
+
+div.sui-search-box__autocomplete-container li[aria-selected="true"] {
+  background-color: #2799d6;
+}
