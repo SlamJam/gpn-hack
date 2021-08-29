@@ -3,11 +3,11 @@ import logging
 import luigi
 import luigi.contrib.s3
 
-from . import hh
+from . import hh, index
 
 # Disable all child loggers
-logging.getLogger("botocore").propagate = False
-logging.getLogger("boto3").propagate = False
+for name in ["botocore", "boto3", "elasticsearch"]:
+    logging.getLogger(name).propagate = False
 
 
 class MainTask(luigi.Task):
@@ -16,4 +16,8 @@ class MainTask(luigi.Task):
     areas_ids = luigi.ListParameter([113])
 
     def requires(self):
-        return [hh.HHClearCompaniesDescriptionsAtArea(area_id) for area_id in self.areas_ids] + [hh.HHGetContries()]
+        return (
+            [hh.HHClearCompaniesDescriptionsAtArea(area_id) for area_id in self.areas_ids]
+            + [hh.HHGetContries()]
+            + [index.IndexHH()]
+        )

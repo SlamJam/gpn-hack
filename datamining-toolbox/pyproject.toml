@@ -19,6 +19,7 @@ manticoresearch = "^1.0.5"
 elasticsearch = {extras = ["async"], version = "^7.14.0"}
 ijson = "^3.1.4"
 jsonlines = "^2.0.0"
+SQLAlchemy = "^1.4.23"
 
 [tool.poetry.dev-dependencies]
 black = "^21.7b0"
