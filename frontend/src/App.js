@@ -53,7 +53,7 @@ if (process.env.REACT_APP_SOURCE === "SITE_SEARCH") {
     searchKey:
       process.env.REACT_APP_SEARCH_KEY || "search-471t5s3fvwd1amhnn8eagzmu",
     engineName:
-      process.env.REACT_APP_SEARCH_ENGINE_NAME || "gazpromneft",
+      process.env.REACT_APP_SEARCH_ENGINE_NAME || "gazpromneft1",
     // hostIdentifier:
     //   process.env.REACT_APP_SEARCH_HOST_IDENTIFIER || "",
     endpointBase: process.env.REACT_APP_SEARCH_ENDPOINT_BASE || "https://gazpromneft.ent.eastus2.azure.elastic-cloud.com"
