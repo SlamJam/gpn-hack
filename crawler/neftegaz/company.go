@@ -17,11 +17,12 @@ var logoStyleRE = regexp.MustCompile(`background-image: url\((.*)\)`)
 const LogoTemplate = "https://market.neftegaz.ru%s"
 
 type Company struct {
-	Name       string   `json:"name"`
-	Labels     []string `json:"labels"`
-	Logo       string   `json:"logo"`
-	Geo        string   `json:"geo"`
-	Attributes struct {
+	Name        string   `json:"name"`
+	Description string   `json:"description"`
+	Labels      []string `json:"labels"`
+	Logo        string   `json:"logo"`
+	Geo         string   `json:"geo"`
+	Attributes  struct {
 		PostalAddress string `json:"postal_address"`
 		Phone         string `json:"phone"`
 		Email         string `json:"email"`
@@ -46,6 +47,7 @@ func CrawlCompanyPage(url string) (*Company, error) {
 
 	var company Company
 	company.Name = FixString(doc.Find(".m-company-info__head-title span").Text())
+	company.Description = FixString(doc.Find(".m-company-info__about-text").Text())
 	logoStyle, _ := doc.Find(".m-company-info__head-img").Attr("style")
 	company.Logo = ExtractLogo(logoStyle)
 	doc.Find(".m-company-info__contacts-title a").Each(func(_ int, s *goquery.Selection) {
